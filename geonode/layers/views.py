@@ -25,6 +25,7 @@ import shutil
 import traceback
 import uuid
 import decimal
+import yaml
 
 from guardian.shortcuts import get_perms
 from django.contrib import messages
@@ -34,6 +35,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.conf import settings
 from django.template import RequestContext
+from django.template.loader import get_template
 from django.utils.translation import ugettext as _
 try:
     import json
@@ -343,14 +345,18 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
 
     if request.user.has_perm('view_resourcebase', layer.get_self_resource()):
         context_dict["links"] = links_view
+
     if request.user.has_perm('download_resourcebase', layer.get_self_resource()):
-        if layer.storeType == 'dataStore':
-            links = layer.link_set.download().filter(
-                name__in=settings.DOWNLOAD_FORMATS_VECTOR)
+        if getattr(settings, "TEMPLATE_LAYER_MODAL_DOWNLOAD_LINKS", ""):
+            linksByName = {link.name: link for link in links}
+            layerModalDownloadLinks = yaml.load(get_template(settings.TEMPLATE_LAYER_MODAL_DOWNLOAD_LINKS).render({}))
+            context_dict["layer_modal_download_links"] = [{'title': link['title'], 'links': [linksByName[x] for x in link['links']]} for link in layerModalDownloadLinks]
         else:
-            links = layer.link_set.download().filter(
-                name__in=settings.DOWNLOAD_FORMATS_RASTER)
-        context_dict["links_download"] = links_download
+            context_dict["layer_modal_download_links"] = [
+                { "title": "Images", "links": context_dict["links"]},
+                { "title": "Data", "links": context_dict["links_download"]},
+            ]
+            #context_dict["links_download"] = links_download
 
     if settings.SOCIAL_ORIGINS:
         context_dict["social_links"] = build_social_links(request, layer)

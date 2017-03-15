@@ -753,6 +753,7 @@ def final_step(upload_session, user):
         regions_resolved = list(set(regions_resolved))
         if regions:
             if len(regions) > 0:
+                saved_layer.regions.clear()
                 saved_layer.regions.add(*regions_resolved)
 
         # set taggit keywords

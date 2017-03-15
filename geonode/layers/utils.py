@@ -531,6 +531,7 @@ def file_upload(filename, name=None, user=None, title=None, abstract=None,
     regions_resolved = list(set(regions_resolved))
     if regions_resolved:
         if len(regions_resolved) > 0:
+            layer.regions.clear()
             layer.regions.add(*regions_resolved)
 
     if date is not None:
@@ -541,7 +542,7 @@ def file_upload(filename, name=None, user=None, title=None, abstract=None,
 
 
 def upload(incoming, user=None, overwrite=False,
-           keywords=(), category=None, regions=(),
+           keywords=None, category=None, regions=None,
            skip=True, ignore_errors=True,
            verbosity=1, console=None, title=None, date=None,
            private=False, metadata_uploaded_preserve=False):

@@ -52,9 +52,9 @@
     </div>
 
     <div class="tab-content">
-
-    {% include "base/resourcebase_info_panel.html" %}
-
+      <article id="info" class="tab-pane{% if tab == 'info' or not tab %} active{% endif %}">
+      {% include "base/resourcebase_info_panel.html" %}
+      </article>
      {% if resource.is_mosaic %}
       <article id="granules" class="description tab-pane {% if tab and tab == 'granules' %}active{% endif %}">
         <div class="paginate-contents">

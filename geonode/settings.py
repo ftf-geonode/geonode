@@ -727,7 +727,9 @@ MAP_BASELAYERS = [{
     "group": "background"
 }]
 
-SOCIAL_BUTTONS = True
+DISPLAY_SOCIAL = True
+DISPLAY_RATINGS = False
+DISPLAY_COMMENTS = False
 
 SOCIAL_ORIGINS = [{
     "label": "Email",

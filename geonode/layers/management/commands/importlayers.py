@@ -64,6 +64,15 @@ class Command(BaseCommand):
                     if multiple imports are done in one command"""
         ),
         make_option(
+            '-l',
+            '--license',
+            dest='license',
+            default=None,
+            help="""The license for the
+                    imported layer(s). Will be the same for all imported layers
+                    if multiple imports are done in one command"""
+        ),
+        make_option(
             '-c',
             '--category',
             dest='category',
@@ -87,6 +96,15 @@ class Command(BaseCommand):
             dest='title',
             default=None,
             help="""The title for the
+                    imported layer(s). Will be the same for all imported layers
+                    if multiple imports are done in one command"""
+        ),
+        make_option(
+            '-a',
+            '--abstract',
+            dest='abstract',
+            default=None,
+            help="""The abstract for the
                     imported layer(s). Will be the same for all imported layers
                     if multiple imports are done in one command"""
         ),
@@ -124,9 +142,11 @@ class Command(BaseCommand):
         username = options.get('user')
         user = get_valid_user(username)
         overwrite = options.get('overwrite')
+        license = options.get('license', None)
         category = options.get('category', None)
         private = options.get('private', False)
         title = options.get('title', None)
+        abstract = options.get('abstract', None)
         date = options.get('date', None)
         metadata_uploaded_preserve = options.get('metadata_uploaded_preserve',
                                                  False)
@@ -162,9 +182,11 @@ class Command(BaseCommand):
                 keywords=keywords,
                 verbosity=verbosity,
                 console=console,
+                license=license,
                 category=category,
                 regions=regions,
                 title=title,
+                abstract=abstract,
                 date=date,
                 private=private,
                 metadata_uploaded_preserve=metadata_uploaded_preserve)

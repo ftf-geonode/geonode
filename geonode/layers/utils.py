@@ -45,7 +45,7 @@ from django.db.models import Q
 from geonode import GeoNodeException
 from geonode.people.utils import get_valid_user
 from geonode.layers.models import Layer, UploadSession
-from geonode.base.models import Link, SpatialRepresentationType, TopicCategory, Region
+from geonode.base.models import Link, SpatialRepresentationType, TopicCategory, Region, License
 from geonode.layers.models import shp_exts, csv_exts, vec_exts, cov_exts
 from geonode.layers.metadata import set_metadata
 from geonode.utils import http_client
@@ -371,7 +371,9 @@ def extract_tarfile(upload_file, extension='.shp', tempdir=None):
 
 
 def file_upload(filename, name=None, user=None, title=None, abstract=None,
-                keywords=None, category=None, regions=None, date=None,
+                license=None,
+                category=None, keywords=None, regions=None,
+                date=None,
                 skip=True, overwrite=False, charset='UTF-8',
                 metadata_uploaded_preserve=False,
                 metadata_upload_form=False):
@@ -400,6 +402,13 @@ def file_upload(filename, name=None, user=None, title=None, abstract=None,
     # Create a name from the title if it is not passed.
     if name is None:
         name = slugify(title).replace('-', '_')
+
+    if license is not None:
+        licenses = License.objects.filter(Q(name__iexact=license) | Q(abbreviation__iexact=license) | Q(url__iexact=license) | Q(description__iexact=license))
+        if len(licenses) == 1:
+            license = licenses[0]
+        else:
+            license = None
 
     if category is not None:
         categories = TopicCategory.objects.filter(Q(identifier__iexact=category) | Q(gn_description__iexact=category))
@@ -442,6 +451,7 @@ def file_upload(filename, name=None, user=None, title=None, abstract=None,
         'bbox_y0': bbox_y0,
         'bbox_y1': bbox_y1,
         'is_published': is_published,
+        'license': license,
         'category': category
     }
 
@@ -534,6 +544,10 @@ def file_upload(filename, name=None, user=None, title=None, abstract=None,
             layer.regions.clear()
             layer.regions.add(*regions_resolved)
 
+    if abstract is not None:
+        layer.abstract = abstract
+        layer.save()
+
     if date is not None:
         layer.date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
         layer.save()
@@ -542,9 +556,11 @@ def file_upload(filename, name=None, user=None, title=None, abstract=None,
 
 
 def upload(incoming, user=None, overwrite=False,
-           keywords=None, category=None, regions=None,
+           title=None, abstract=None, date=None,
+           license=None,
+           category=None, keywords=None, regions=None,
            skip=True, ignore_errors=True,
-           verbosity=1, console=None, title=None, date=None,
+           verbosity=1, console=None,
            private=False, metadata_uploaded_preserve=False):
     """Upload a directory of spatial data files to GeoNode
 
@@ -627,10 +643,12 @@ def upload(incoming, user=None, overwrite=False,
                 layer = file_upload(filename,
                                     user=user,
                                     overwrite=overwrite,
-                                    keywords=keywords,
+                                    license=license,
                                     category=category,
+                                    keywords=keywords,
                                     regions=regions,
                                     title=title,
+                                    abstract=abstract,
                                     date=date,
                                     metadata_uploaded_preserve=metadata_uploaded_preserve
                                     )

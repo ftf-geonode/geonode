@@ -531,6 +531,22 @@ def file_upload(filename, name=None, user=None, title=None, abstract=None,
         layer.overwrite = overwrite
         layer.save()
 
+    if abstract is not None:
+        layer.abstract = abstract
+        layer.save()
+
+    if date is not None:
+        layer.date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
+        layer.save()
+
+    if license is not None:
+        layer.license = license
+        layer.save()
+
+    if category is not None:
+        layer.category = category
+        layer.save()
+
     # Assign the keywords (needs to be done after saving)
     keywords = list(set(keywords))
     if keywords:
@@ -543,14 +559,6 @@ def file_upload(filename, name=None, user=None, title=None, abstract=None,
         if len(regions_resolved) > 0:
             layer.regions.clear()
             layer.regions.add(*regions_resolved)
-
-    if abstract is not None:
-        layer.abstract = abstract
-        layer.save()
-
-    if date is not None:
-        layer.date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
-        layer.save()
 
     return layer
 

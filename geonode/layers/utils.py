@@ -531,6 +531,19 @@ def file_upload(filename, name=None, user=None, title=None, abstract=None,
         layer.overwrite = overwrite
         layer.save()
 
+    # Assign the keywords (needs to be done after saving)
+    keywords = list(set(keywords))
+    if keywords:
+        if len(keywords) > 0:
+            layer.keywords.add(*keywords)
+
+    # Assign the regions (needs to be done after saving)
+    regions_resolved = list(set(regions_resolved))
+    if regions_resolved:
+        if len(regions_resolved) > 0:
+            layer.regions.clear()
+            layer.regions.add(*regions_resolved)
+
     if abstract is not None:
         layer.abstract = abstract
         layer.save()
@@ -546,19 +559,6 @@ def file_upload(filename, name=None, user=None, title=None, abstract=None,
     if category is not None:
         layer.category = category
         layer.save()
-
-    # Assign the keywords (needs to be done after saving)
-    keywords = list(set(keywords))
-    if keywords:
-        if len(keywords) > 0:
-            layer.keywords.add(*keywords)
-
-    # Assign the regions (needs to be done after saving)
-    regions_resolved = list(set(regions_resolved))
-    if regions_resolved:
-        if len(regions_resolved) > 0:
-            layer.regions.clear()
-            layer.regions.add(*regions_resolved)
 
     return layer
 

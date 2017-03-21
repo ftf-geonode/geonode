@@ -402,6 +402,8 @@ def file_upload(filename, name=None, user=None, title=None, abstract=None,
     # Create a name from the title if it is not passed.
     if name is None:
         name = slugify(title).replace('-', '_')
+    else:
+        name = slugify(name) # assert that name is slugified
 
     if license is not None:
         licenses = License.objects.filter(Q(name__iexact=license) | Q(abbreviation__iexact=license) | Q(url__iexact=license) | Q(description__iexact=license))
@@ -544,27 +546,36 @@ def file_upload(filename, name=None, user=None, title=None, abstract=None,
             layer.regions.clear()
             layer.regions.add(*regions_resolved)
 
+    saveAgain = False
+
+    if title is not None:
+        layer.title = title
+        saveAgain = True
+
     if abstract is not None:
         layer.abstract = abstract
-        layer.save()
+        saveAgain = True
 
     if date is not None:
         layer.date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
-        layer.save()
+        saveAgain = True
 
     if license is not None:
         layer.license = license
-        layer.save()
+        saveAgain = True
 
     if category is not None:
         layer.category = category
+        saveAgain = True
+
+    if saveAgain:
         layer.save()
 
     return layer
 
 
 def upload(incoming, user=None, overwrite=False,
-           title=None, abstract=None, date=None,
+           name=None, title=None, abstract=None, date=None,
            license=None,
            category=None, keywords=None, regions=None,
            skip=True, ignore_errors=True,
@@ -617,6 +628,10 @@ def upload(incoming, user=None, overwrite=False,
         msg = "Found %d potential layers." % number
         print >> console, msg
 
+    if (number > 1) and (name is not None):
+        msg = 'Failed to process.  Cannot specify name with multiple imports.'
+        raise Exception(msg, e), None, sys.exc_info()[2]
+
     output = []
     for i, file_pair in enumerate(potential_files):
         basename, filename = file_pair
@@ -649,15 +664,16 @@ def upload(incoming, user=None, overwrite=False,
                     filename = extract_tarfile(filename)
 
                 layer = file_upload(filename,
+                                    name=name,
+                                    title=title,
+                                    abstract=abstract,
+                                    date=date,
                                     user=user,
                                     overwrite=overwrite,
                                     license=license,
                                     category=category,
                                     keywords=keywords,
                                     regions=regions,
-                                    title=title,
-                                    abstract=abstract,
-                                    date=date,
                                     metadata_uploaded_preserve=metadata_uploaded_preserve
                                     )
                 if not existed:

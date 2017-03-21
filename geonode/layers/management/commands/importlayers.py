@@ -91,6 +91,13 @@ class Command(BaseCommand):
                     if multiple imports are done in one command"""
         ),
         make_option(
+            '-n',
+            '--name',
+            dest='layername',
+            default=None,
+            help="""The name for the imported layer(s). Can not be used with multiple imports"""
+        ),
+        make_option(
             '-t',
             '--title',
             dest='title',
@@ -142,12 +149,13 @@ class Command(BaseCommand):
         username = options.get('user')
         user = get_valid_user(username)
         overwrite = options.get('overwrite')
-        license = options.get('license', None)
-        category = options.get('category', None)
-        private = options.get('private', False)
+        name = options.get('layername', None)
         title = options.get('title', None)
         abstract = options.get('abstract', None)
         date = options.get('date', None)
+        license = options.get('license', None)
+        category = options.get('category', None)
+        private = options.get('private', False)
         metadata_uploaded_preserve = options.get('metadata_uploaded_preserve',
                                                  False)
 
@@ -179,15 +187,16 @@ class Command(BaseCommand):
                 user=user,
                 overwrite=overwrite,
                 skip=skip,
+                name=name,
+                title=title,
+                abstract=abstract,
+                date=date,
                 keywords=keywords,
                 verbosity=verbosity,
                 console=console,
                 license=license,
                 category=category,
                 regions=regions,
-                title=title,
-                abstract=abstract,
-                date=date,
                 private=private,
                 metadata_uploaded_preserve=metadata_uploaded_preserve)
 

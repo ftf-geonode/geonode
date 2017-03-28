@@ -30,6 +30,7 @@ import geonode.proxy.urls
 
 from geonode.api.urls import api
 from geonode.api.views import verify_token, roles, users, admin_role
+from geonode.layers.views import api_layers_remove
 
 import autocomplete_light
 
@@ -116,6 +117,7 @@ urlpatterns = patterns('',
                        url(r'^api/roles', roles, name='roles'),
                        url(r'^api/adminRole', admin_role, name='adminRole'),
                        url(r'^api/users', users, name='users'),
+                       url(r'^api/layers/remove', api_layers_remove, name='api_layers_remove'),
                        url(r'', include(api.urls)),
                        )
 

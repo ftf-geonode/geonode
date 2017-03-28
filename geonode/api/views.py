@@ -24,6 +24,7 @@ from django.utils import timezone
 from oauth2_provider.models import AccessToken
 from oauth2_provider.exceptions import OAuthToolkitError, FatalClientError
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse

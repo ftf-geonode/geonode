@@ -1,0 +1,29 @@
+{% load i18n %}
+{% verbatim %}
+<div id="_bulk_remove" class="modal fade"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">{{ 'Remove ' + facetType | title | trans }}</h4>
+      </div>
+      <div class="modal-body">
+        <h4>{{ 'Are you sure you want to remove the following ' + facetType + '?' | trans }}</h4>
+        <ul class="list-group">
+          <li
+            class="list-group-item"
+            ng-repeat="resource in cart.getCart().items">{{ resource.title }}</li>
+        </ul>
+      </div>
+      <div class="alert hidden" id="bulk_remove_message">
+        <p class="message">}</p>
+        <p class="extra_content"></p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-danger" ng-click="bulk_remove_submit()" id="bulk_remove_submit">{{ 'Remove ' + facetType | title | trans }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endverbatim %}

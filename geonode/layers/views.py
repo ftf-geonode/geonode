@@ -47,6 +47,8 @@ from django.forms.models import inlineformset_factory
 from django.db import transaction
 from django.db.models import F
 from django.forms.util import ErrorList
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 from geonode.tasks.deletion import delete_layer
 from geonode.services.models import Service
@@ -906,3 +908,42 @@ def layer_metadata_upload(request, layername, template='layers/layer_metadata_up
         "layer": layer,
         'SITEURL': settings.SITEURL[:-1]
     }))
+
+
+@csrf_exempt
+@require_POST
+def api_layers_remove(request):
+
+    layer_ids = request.POST.getlist('resources', [])
+    if layer_ids:
+        allowed_layers = []
+        disallowed_layers = []
+
+        for layer_id in layer_ids:
+            try:
+                resource = resolve_object(
+                    request, Layer, {
+                        'id': layer_id
+                    },
+                    'base.change_resourcebase_permissions')
+                allowed_layers.append(resource)
+            except PermissionDenied:
+                disallowed_layers.append(Layer.objects.get(id=layer_id).title)
+
+        for layer in allowed_layers:
+            try:
+                with transaction.atomic():
+                    layer.delete()
+            except Exception as e:
+                message = '{0}: {1}.'.format(_('Unable to delete layer'), layer.typename)
+
+        return HttpResponse(
+            json.dumps({'success': 'ok', 'not_changed': disallowed_layers}),
+            status=200,
+            content_type='text/plain'
+        )
+    else:
+        return HttpResponse(
+            json.dumps({'error': 'No layers specified.'}),
+            status=400,
+            content_type='text/plain')

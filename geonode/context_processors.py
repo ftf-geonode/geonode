@@ -19,7 +19,6 @@
 #########################################################################
 
 from django.conf import settings
-from geonode import get_version
 from geonode.catalogue import default_catalogue_backend
 from django.contrib.sites.models import Site
 
@@ -31,7 +30,7 @@ def resource_urls(request):
         STATIC_URL=settings.STATIC_URL,
         CATALOGUE_BASE_URL=default_catalogue_backend()['URL'],
         REGISTRATION_OPEN=settings.REGISTRATION_OPEN,
-        VERSION=get_version(),
+        VERSION=settings.VERSION,
         SITE_NAME=site.name,
         SITE_DOMAIN=site.domain,
         SITEURL=settings.SITEURL,

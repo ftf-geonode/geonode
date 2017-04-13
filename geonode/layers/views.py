@@ -351,8 +351,10 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     if request.user.has_perm('download_resourcebase', layer.get_self_resource()):
         if getattr(settings, "TEMPLATE_LAYER_MODAL_DOWNLOAD_LINKS", ""):
             linksByName = {link.name: link for link in links}
-            layerModalDownloadLinks = yaml.load(get_template(settings.TEMPLATE_LAYER_MODAL_DOWNLOAD_LINKS).render({}))
-            context_dict["layer_modal_download_links"] = [{'title': link['title'], 'links': [linksByName[x] for x in link['links']]} for link in layerModalDownloadLinks]
+            layerModalDownloadLinks = yaml.load(get_template(settings.TEMPLATE_LAYER_MODAL_DOWNLOAD_LINKS).render({
+                "storeType": layer.storeType
+            }))
+            context_dict["layer_modal_download_links"] = [{'title': link['title'], 'links': [linksByName.get(x) for x in link['links'] if linksByName.get(x)]} for link in layerModalDownloadLinks]
         else:
             context_dict["layer_modal_download_links"] = [
                 { "title": "Images", "links": context_dict["links"]},

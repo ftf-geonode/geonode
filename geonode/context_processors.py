@@ -19,9 +19,12 @@
 #########################################################################
 
 from django.conf import settings
-from geonode.catalogue import default_catalogue_backend
 from django.contrib.sites.models import Site
 
+from geonode.catalogue import default_catalogue_backend
+from geonode.layers.models import Layer
+
+from geonode.contrib.projects.utils import get_projects
 
 def resource_urls(request):
     """Global values to pass to templates"""
@@ -128,7 +131,12 @@ def resource_urls(request):
             'SEARCH_FILTERS',
             False
         ),
-        THESAURI_FILTERS=[t['name'] for t in settings.THESAURI if t.get('filter')],
+        THESAURI_FILTERS=[t['name'] for t in settings.THESAURI if t.get('filter')]
     )
+
+    if "geonode.contrib.projects" in settings.INSTALLED_APPS:
+        defaults["PROJECTS"] = get_projects()
+
+    defaults["REGIONS"] = list(reduce(lambda x, y: x|y, [set(x.regions.values_list('name', flat=True)) for x in Layer.objects.all()]))
 
     return defaults

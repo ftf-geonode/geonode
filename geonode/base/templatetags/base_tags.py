@@ -18,6 +18,10 @@
 #
 #########################################################################
 
+import bleach
+import markdown
+import re
+
 from django import template
 
 from agon_ratings.models import Rating
@@ -130,3 +134,27 @@ def get_context_resourcetype(context):
         if "/{0}/".format(resource_type) in c_path:
             return resource_type
     return 'error'
+
+
+@register.filter(name='md2html')
+def md2html(value):
+    md = markdown.markdown(value).strip()
+    md = re.sub(r"(<a .*)>(.*?)</a>", r'\1 target="_blank">\2</a>', md, flags=(re.M | re.I))
+    md = re.sub("\n", "<br>", md)
+    return md
+
+@register.filter(name='divide_inverted')
+def divide_inverted(value, arg):
+    return arg / value;
+
+@register.filter(name='bleach')
+def bleach_html(value):
+    return bleach.clean(value)
+
+@register.filter(name='strip_tag')
+def strip_tag(value, tag):
+    print value
+    if value is not None and value.startswith("<"+tag+">") and value.endswith("</"+tag+">"):
+        return value[len("<"+tag+">"):-1*len("</"+tag+">")]
+    else:
+        return value

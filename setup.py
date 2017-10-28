@@ -52,7 +52,7 @@ setup(name='GeoNode',
         "pillow>=3.1.1",  # python-imaging (3.1.2)
         "lxml>=3.4.4",  # python-lxml (3.5.0)
         "psycopg2>=2.4.5",  # python-psycopg2 (2.6.1)
-        "Django >=1.8.7, < 1.9a0",  # python-django (1.8.7)
+        "Django==1.8.17",  # python-django (1.8.7)
 
         # Other
         "pyyaml>=3.11",
@@ -72,16 +72,16 @@ setup(name='GeoNode',
         "boto>=2.38.0",  # python-boto (2.38.0)
 
         # Django Apps
-        "django-pagination >=1.0.5, <=1.0.7",  # python-django-pagination (1.0.7)
+        "django-pagination==1.0.7",  # python-django-pagination (1.0.7)
         "django-extensions>=1.2.5",  # python-django-extensions (1.5.9)
         "django-jsonfield>=0.9.16",  # python-django-jsonfield (0.9.15, 1.0.1 in our ppa)
-        "django-taggit>=0.21.0",  # python-django-taggit (0.18.0)
-        "django-mptt>=0.8.6",  # django-mptt (0.8.0, 0.8.6 in our ppa)
-        "django-treebeard>=3.0",  # django-treebeard (4.0)
-        "django-guardian>=1.4.1",  # django-guardian (1.4.1)
-        "django-downloadview>=1.2",  # python-django-downloadview (1.8)
-        "django-polymorphic>=0.9.2",  # python-django-polymorphic (0.8.1) FIXME
-        "django-tastypie>=0.12.2",  # python-django-tastypie (0.12.0, 0.12.2 in our ppa)
+        "django-taggit==0.22.0",  # python-django-taggit (0.18.0)
+        "django-mptt==0.8.7",  # django-mptt (0.8.0, 0.8.6 in our ppa)
+        "django-treebeard==4.1.0",  # django-treebeard (4.0)
+        "django-guardian==1.4.6",  # django-guardian (1.4.1)
+        "django-downloadview==1.9",  # python-django-downloadview (1.8)
+        "django-polymorphic==1.1",  # python-django-polymorphic (0.8.1) FIXME
+        "django-tastypie==0.13.3",  # python-django-tastypie (0.12.0, 0.12.2 in our ppa)
         "django-oauth-toolkit>=0.10.0",  # python-django-oauth-toolkit (0.10.0)
 
         # geopython dependencies
@@ -96,24 +96,24 @@ setup(name='GeoNode',
         # Django Apps
         "awesome-slugify>=1.6.2",
         "dj-database-url >=0.4.0",
-        "pinax-theme-bootstrap>=3.0a11",
-        "pinax-theme-bootstrap-account>=1.0b2",
-        "django-forms-bootstrap>=3.0.1",
-        "django-friendly-tag-loader>=1.2.1",
-        "django-activity-stream>=0.6.1",
-        "django-leaflet>=0.13.7",
-        "django-autocomplete-light>=2.3.3, <3.0a0",
-        "django-modeltranslation>=0.11",  # python-django-modeltranslation (0.11 Debian)
+        "pinax-theme-bootstrap==8.0.1",
+        "pinax-theme-bootstrap-account==1.0b2",
+        "django-forms-bootstrap==3.0.1",
+        "django-friendly-tag-loader==1.2.1",
+        "django-activity-stream==0.6.3",
+        "django-leaflet==0.21.0",
+        "django-autocomplete-light==2.3.3",
+        "django-modeltranslation==0.12",  # python-django-modeltranslation (0.11 Debian)
 
         # GeoNode org maintained apps.
         "django-geoexplorer>=4.0.5",
-        "geonode-user-messages>=0.1.4",  # (0.1.3 in ppa) FIXME
+        "geonode-user-messages==0.1.5",  # (0.1.3 in ppa) FIXME
         "geonode-avatar>=2.1.6",  # (2.1.5 in ppa) FIXME
         "geonode-announcements>=1.0.8",
         "geonode-agon-ratings>=0.3.5",  # (0.3.1 in ppa) FIXME
-        "geonode-user-accounts>=1.0.13",  # (1.0.11 in ppa) FIXME
+        "geonode-user-accounts==1.0.13",  # (1.0.11 in ppa) FIXME
         "geonode-arcrest>=10.2",
-        "geonode-notification>=1.1.1",
+        "geonode-notification==1.1.3",
         "geonode-dialogos>=0.5",
         "gsconfig>=1.0.6",  # (1.0.3 in ppa) FIXME
         "gsimporter>=1.0.0",  # (0.1 in ppa) FIXME
